@@ -16,30 +16,28 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'npm test'
+                bat 'npm test'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh """
-                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-                """
+                bat " docker build -t ${IMAGE_NAME}:${IMAGE_TAG} . "
             }
         }
 
         stage('Deploy') {
             steps {
-                sh """
+                bat "
                     docker rm -f ${IMAGE_NAME} || true
                     docker run -d --name ${IMAGE_NAME} -p 3000:3000 ${IMAGE_NAME}:${IMAGE_TAG}
-                """
+                "
             }
         }
     }
